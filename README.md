@@ -10,6 +10,19 @@ The widget watches the recorder's runtime state file and the recordings
 folder, so it stays in sync with the keybind, the menu, and anything else
 that drives the same scripts.
 
+## Screenshots
+
+While recording — recorder glyph with live elapsed time in the alert color:
+
+![Recording state](docs/widget-recording.png)
+
+Idle with one un-transcribed recording in the backlog:
+
+![Backlog badge](docs/widget-idle.png)
+
+After clicking stop (or toggling the keybind) — the save notification:
+![Saved notification](docs/notification-saved.png)
+
 ## Install
 
 ```bash
