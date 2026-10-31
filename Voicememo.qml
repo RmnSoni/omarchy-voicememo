@@ -49,9 +49,12 @@ BarWidget {
   }
 
   function toggleRecord() {
-    // PATH lookup: works wherever an omarchy-soundrecord script exists
-    // (stock Omarchy installs ship one; personal pipelines may shadow it)
-    if (root.bar) root.bar.run("omarchy-soundrecord")
+    // Run the bundled pw-record wrapper next to this QML. Same state-file
+    // contract as the omarchy-soundrecord convention, so external toggles
+    // (keybinds, menus) stay in sync with the widget.
+    var url = Qt.resolvedUrl("soundrecord.sh").toString()
+    var script = String(url).replace(/^file:\/\//, "")
+    if (root.bar && script.indexOf("/") === 0) root.bar.run("\"" + script + "\"")
   }
 
   function transcribeAll() {

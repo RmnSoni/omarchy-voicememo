@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "io.github.rmnsoni.voicememo",
   "name": "Voice Memo",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "RmnSoni",
   "license": "MIT",
   "description": "Voice-memo pipeline control in the bar: toggle the mic recorder, see live recording time, and a badge for recordings not yet transcribed.",

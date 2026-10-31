@@ -1,14 +1,13 @@
 # Voice Memo — Omarchy shell plugin
 
 Bar widget for a mic voice-memo pipeline: record toggle, live elapsed time,
-and an un-transcribed recordings badge. Built around two companion scripts:
-
-- `omarchy-soundrecord` — toggle the mic recorder (pw-record → FLAC)
-- `omarchy-voicenote` — transcribe recordings that have no `.txt` yet
+and an un-transcribed recordings badge. The recorder toggle (pw-record →
+FLAC, with a race-safe state file) is bundled; transcription
+(`omarchy-voicenote`) is an optional companion script.
 
 The widget watches the recorder's runtime state file and the recordings
 folder, so it stays in sync with the keybind, the menu, and anything else
-that drives the same scripts.
+that drives the same state conventions.
 
 ## Screenshots
 
@@ -37,18 +36,18 @@ omarchy bar put io.github.rmnsoni.voicememo --section center
 
 (or add `{"id": "io.github.rmnsoni.voicememo"}` to `~/.config/omarchy/shell.json`).
 
-The two scripts are personal (the voice pipeline runs on one machine), so
-they are not part of the plugin. Where they are absent, the toggle and
-transcribe clicks simply do nothing, and the widget still works read-only:
-it reflects the recorder state file and counts un-transcribed `*.flac`
-files in the folder it watches.
+The recorder toggle is bundled with the plugin (`soundrecord.sh` — a small
+pw-record wrapper: SUPER-SHIFT-R-style toggle, FLAC into
+`~/Music/Recordings`, flock-guarded so a double keypress can never spawn a
+second recorder, and orphan cleanup if a state file is lost). Transcription
+(`omarchy-voicenote`, a personal script) is not shipped; without it the
+transcribe click does nothing and the widget still works fully as an
+indicator: recording state, live elapsed time, and un-transcribed backlog.
 
-**Dependencies:** no hard requirements beyond Omarchy itself. The widget
-spawns one short `bash -c` probe per second (state-file read + a glob for
-untranscribed FLACs). Click actions shell out to `omarchy-soundrecord`
-(record toggle — a PATH lookup, so any script by that name works; on stock
-Omarchy installs without one the click no-ops), `omarchy-voicenote`
-(transcribe backlog — optional personal script) and `xdg-open` (folder).
+**Dependencies:** bash, coreutils and `pw-record` from pipewire (all ship
+with Omarchy). Notifications go through `omarchy-notification-send`;
+transcribe click shells out to `omarchy-voicenote` when present; folder
+clicks use `xdg-open`.
 
 ### Remove
 
@@ -56,8 +55,7 @@ Omarchy installs without one the click no-ops), `omarchy-voicenote`
 omarchy plugin remove io.github.rmnsoni.voicememo
 ```
 
-(If the widget entry stays behind in `~/.config/omarchy/shell.json`, delete
-the bar layout line or reset the bar with `omarchy refresh shell`.)
+Stops working immediately; recorded files stay in `~/Music/Recordings`.
 
 ## Widget behaviour
 
@@ -75,7 +73,7 @@ the bar layout line or reset the bar with `omarchy refresh shell`.)
 
 | Button | Action |
 |---|---|
-| Left | Toggle the recorder (`omarchy-soundrecord` if present on PATH) |
+| Left | Toggle recording (bundled pw-record wrapper) |
 | Middle | `omarchy-voicenote --all` — transcribe every unprocessed recording |
 | Right | Open the recordings folder |
 
