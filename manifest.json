@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "id": "io.github.rmnsoni.voicememo",
+  "name": "Voice Memo",
+  "version": "1.0.0",
+  "author": "RmnSoni",
+  "license": "MIT",
+  "description": "Voice-memo pipeline control in the bar: toggle the mic recorder, see live recording time, and a badge for recordings not yet transcribed.",
+  "kinds": ["bar-widget"],
+  "activation": "on-demand",
+  "entryPoints": {
+    "barWidget": "Voicememo.qml"
+  },
+  "barWidget": {
+    "displayName": "Voice Memo",
+    "description": "Mic voice-memo recorder toggle with live elapsed time and an un-transcribed recordings badge. Wired to omarchy-soundrecord and omarchy-voicenote. Left-click toggles recording, middle-click transcribes the backlog, right-click opens the recordings folder.",
+    "category": "Capture",
+    "aliases": [
+      "voicememo",
+      "voice-memo",
+      "soundrecord",
+      "memo",
+      "voice"
+    ],
+    "defaultSection": "center",
+    "allowMultiple": false,
+    "defaults": {
+      "recordDir": "",
+      "showPending": "On"
+    },
+    "schema": [
+      {
+        "key": "recordDir",
+        "type": "path",
+        "label": "Recordings folder",
+        "defaultValue": "",
+        "description": "Leave empty to follow OMARCHY_SOUNDRECORD_DIR / XDG_MUSIC_DIR (default ~/Music/Recordings)."
+      },
+      {
+        "key": "showPending",
+        "type": "enum",
+        "label": "Badge for un-transcribed recordings",
+        "options": [
+          "On",
+          "Off"
+        ],
+        "defaultValue": "On"
+      }
+    ]
+  }
+}
