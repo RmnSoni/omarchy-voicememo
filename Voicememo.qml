@@ -49,7 +49,9 @@ BarWidget {
   }
 
   function toggleRecord() {
-    if (root.bar) root.bar.run("/home/rmn/.local/bin/omarchy-soundrecord")
+    // PATH lookup: works wherever an omarchy-soundrecord script exists
+    // (stock Omarchy installs ship one; personal pipelines may shadow it)
+    if (root.bar) root.bar.run("omarchy-soundrecord")
   }
 
   function transcribeAll() {

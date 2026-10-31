@@ -38,9 +38,26 @@ omarchy bar put io.github.rmnsoni.voicememo --section center
 (or add `{"id": "io.github.rmnsoni.voicememo"}` to `~/.config/omarchy/shell.json`).
 
 The two scripts are personal (the voice pipeline runs on one machine), so
-they are not part of the plugin. Without them the widget still works
-read-only: it reflects the recorder state file and counts un-transcribed
-`*.flac` files in the folder it watches.
+they are not part of the plugin. Where they are absent, the toggle and
+transcribe clicks simply do nothing, and the widget still works read-only:
+it reflects the recorder state file and counts un-transcribed `*.flac`
+files in the folder it watches.
+
+**Dependencies:** no hard requirements beyond Omarchy itself. The widget
+spawns one short `bash -c` probe per second (state-file read + a glob for
+untranscribed FLACs). Click actions shell out to `omarchy-soundrecord`
+(record toggle — a PATH lookup, so any script by that name works; on stock
+Omarchy installs without one the click no-ops), `omarchy-voicenote`
+(transcribe backlog — optional personal script) and `xdg-open` (folder).
+
+### Remove
+
+```bash
+omarchy plugin remove io.github.rmnsoni.voicememo
+```
+
+(If the widget entry stays behind in `~/.config/omarchy/shell.json`, delete
+the bar layout line or reset the bar with `omarchy refresh shell`.)
 
 ## Widget behaviour
 
@@ -58,7 +75,7 @@ read-only: it reflects the recorder state file and counts un-transcribed
 
 | Button | Action |
 |---|---|
-| Left | Toggle recording (same as the SUPER SHIFT + R keybind) |
+| Left | Toggle the recorder (`omarchy-soundrecord` if present on PATH) |
 | Middle | `omarchy-voicenote --all` — transcribe every unprocessed recording |
 | Right | Open the recordings folder |
 
