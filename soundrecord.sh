@@ -14,6 +14,10 @@
 
 set -u
 
+# Keep microphone recordings and runtime files private, regardless of the
+# caller's umask. Child processes (including pw-record) inherit this mask.
+umask 077
+
 [[ -f ~/.config/user-dirs.dirs ]] && source ~/.config/user-dirs.dirs
 OUTPUT_DIR="${OMARCHY_SOUNDRECORD_DIR:-${XDG_MUSIC_DIR:-$HOME/Music}/Recordings}"
 STATE_FILE="${XDG_RUNTIME_DIR:-/tmp}/omarchy-soundrecording"
@@ -80,8 +84,12 @@ Transcribe later: Capture → Transcribe recordings" \
 start_recording() {
   local file pid mute_state
 
-  mkdir -p "$OUTPUT_DIR"
-  file="$OUTPUT_DIR/soundrecording-$(date +'%Y-%m-%d_%H-%M-%S').flac"
+  if ! mkdir -p -m 700 -- "$OUTPUT_DIR" ||
+    ! file=$(mktemp -- "$OUTPUT_DIR/soundrecording-$(date +'%Y-%m-%d_%H-%M-%S')-XXXXXX.flac"); then
+    omarchy-notification-send -u critical -t 3000 "Sound recording failed to start" \
+      "Could not create a private recording file. Check the recordings folder permissions."
+    exit 1
+  fi
 
   # 200>&- keeps the lock fd out of the child: pw-record outlives this script
   pw-record "$file" 200>&- &

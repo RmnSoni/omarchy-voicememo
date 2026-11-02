@@ -49,6 +49,11 @@ with Omarchy). Notifications go through `omarchy-notification-send`;
 transcribe click shells out to `omarchy-voicenote` when present; folder
 clicks use `xdg-open`.
 
+Recordings are created with owner-only permissions (`0600`), and newly
+created recording directories are private (`0700`). Existing directories
+and older recordings keep their current permissions. Each recording gets
+a unique filename so an existing file is never reused.
+
 ### Remove
 
 ```bash
